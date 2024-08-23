@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "S9VbmTINie0=",
+  "dgSpecHash": "Qigc1C5hWKU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\mduma\\Desktop\\LibraryApp\\tests\\tests.csproj",
+  "projectFilePath": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\tests\\tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mduma\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\mduma\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

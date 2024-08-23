@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mduma\\Desktop\\LibraryApp\\tests\\tests.csproj": {}
+    "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\tests\\tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mduma\\Desktop\\LibraryApp\\api\\api.csproj": {
+    "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mduma\\Desktop\\LibraryApp\\api\\api.csproj",
+        "projectUniqueName": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "C:\\Users\\mduma\\Desktop\\LibraryApp\\api\\api.csproj",
+        "projectPath": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\api.csproj",
         "packagesPath": "C:\\Users\\mduma\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mduma\\Desktop\\LibraryApp\\api\\obj\\",
+        "outputPath": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\mduma\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -132,14 +132,14 @@
         }
       }
     },
-    "C:\\Users\\mduma\\Desktop\\LibraryApp\\tests\\tests.csproj": {
+    "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\tests\\tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mduma\\Desktop\\LibraryApp\\tests\\tests.csproj",
+        "projectUniqueName": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\tests\\tests.csproj",
         "projectName": "tests",
-        "projectPath": "C:\\Users\\mduma\\Desktop\\LibraryApp\\tests\\tests.csproj",
+        "projectPath": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\tests\\tests.csproj",
         "packagesPath": "C:\\Users\\mduma\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mduma\\Desktop\\LibraryApp\\tests\\obj\\",
+        "outputPath": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\mduma\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -157,8 +157,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\mduma\\Desktop\\LibraryApp\\api\\api.csproj": {
-                "projectPath": "C:\\Users\\mduma\\Desktop\\LibraryApp\\api\\api.csproj"
+              "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\api.csproj": {
+                "projectPath": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\api.csproj"
               }
             }
           }

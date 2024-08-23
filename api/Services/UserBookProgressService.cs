@@ -13,16 +13,58 @@ namespace api.Services
         private readonly IUserBookProgressRepository _progressRepository;
 
         private readonly IBookRepository _bookRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IUserStatsRepository _userStatsRepository;
 
-        public UserBookProgressService(IUserBookProgressRepository progressRepository, IBookRepository bookRepository)
+
+        public UserBookProgressService(IUserBookProgressRepository progressRepository, IBookRepository bookRepository, IUserRepository userRepository, IUserStatsRepository userStatsRepository)
         {
             _progressRepository = progressRepository;
             _bookRepository = bookRepository;
+            _userRepository = userRepository;
+            _userStatsRepository = userStatsRepository;
         }
 
         public void FinishReadingBook(int userId, int bookId)
         {
-            throw new NotImplementedException();
+            var progress = _progressRepository.GetProgressByUserAndBook(userId, bookId);
+            if (progress == null)
+            {
+                throw new KeyNotFoundException("No reading progress found");
+            }
+
+            _progressRepository.DeleteProgress(progress);
+
+            var user = _userRepository.GetByUserId(userId);
+            var book = _bookRepository.GetBookById(bookId);
+
+            if (user == null || book == null)
+            {
+                throw new KeyNotFoundException("User or book not found");
+            }
+
+            if (user.FinishedBooks == null)
+            {
+                user.FinishedBooks = new List<Book>();
+            }
+
+            if (!user.FinishedBooks.Contains(book))
+            {
+                user.FinishedBooks.Add(book);
+            }
+
+
+
+            var userStats = _userStatsRepository.GetUserStatsByUserId(userId);
+
+            if (userStats != null)
+            {
+                userStats.TotalBookRead += 1;
+                userStats.TotalPagesRead += book.TotalPages;
+                _userStatsRepository.UpdateUserStats(userStats);
+            }
+
+            _userRepository.UpdateUser(user);
         }
 
         public UserBookProgress GetProgressByUserAndBook(int userId, int bookId)
@@ -63,12 +105,10 @@ namespace api.Services
                 throw new ArgumentOutOfRangeException(nameof(currentPage), "Current page must be greater than zero.");
             }
 
-            Console.WriteLine($"Before update: {progress.LastUpdatedTime}"); // Log before update
 
             progress.CurrentPage = currentPage;
             progress.LastUpdatedTime = DateTime.UtcNow; // Make sure this line is correctly updating the timestamp
 
-            Console.WriteLine($"After update: {progress.LastUpdatedTime}"); // Log before update
 
             _progressRepository.UpdateProgress(progress);
         }

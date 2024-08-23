@@ -4700,11 +4700,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\mduma\\Desktop\\LibraryApp\\api\\api.csproj",
+      "projectUniqueName": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\api.csproj",
       "projectName": "api",
-      "projectPath": "c:\\Users\\mduma\\Desktop\\LibraryApp\\api\\api.csproj",
+      "projectPath": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\api.csproj",
       "packagesPath": "C:\\Users\\mduma\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\mduma\\Desktop\\LibraryApp\\api\\obj\\",
+      "outputPath": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\mduma\\AppData\\Roaming\\NuGet\\NuGet.Config",

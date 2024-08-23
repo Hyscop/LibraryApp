@@ -63,6 +63,12 @@ namespace api.Services
 
         public void UpdateUser(User user)
         {
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user), "No User Found");
+            }
+
             var existingUser = _userRepository.GetByUserId(user.UserId);
             if (existingUser != null)
             {

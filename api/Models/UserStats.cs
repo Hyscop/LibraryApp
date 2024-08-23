@@ -13,5 +13,6 @@ namespace api.Models
         public int TotalPagesRead { get; set; }
 
         public User User { get; set; }
+
     }
 }

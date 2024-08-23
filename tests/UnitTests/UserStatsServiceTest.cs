@@ -11,6 +11,7 @@ using Moq;
 using Azure.Core.Pipeline;
 using FluentAssertions;
 using System.IO.Compression;
+using Microsoft.VisualBasic;
 
 namespace tests.UnitTests
 {
@@ -156,5 +157,7 @@ namespace tests.UnitTests
 
             _mockUserStatsRepository.Verify(repo => repo.UpdateUserStats(It.Is<UserStats>(us => us.TotalBookRead == 0 && us.TotalPagesRead == 0)), Times.Once);
         }
+
+
     }
 }
