@@ -16,11 +16,11 @@ namespace tests.UnitTests
     public class AutoMapperTest
     {
         private readonly IMapper _mapper;
-        private readonly Mock<ICategoryService> _mockCategoryService;
+        private readonly Mock<ICategoryRepository> _mockCategoryRepository;
 
         public AutoMapperTest()
         {
-            _mockCategoryService = new Mock<ICategoryService>();
+            _mockCategoryRepository = new Mock<ICategoryRepository>();
 
             var configuration = new MapperConfiguration(cfg =>
             {
@@ -29,7 +29,7 @@ namespace tests.UnitTests
                 {
                     if (type == typeof(CategoryResolver))
                     {
-                        return new CategoryResolver(_mockCategoryService.Object);
+                        return new CategoryResolver(_mockCategoryRepository.Object);
                     }
                     return null;
                 });
@@ -59,7 +59,7 @@ namespace tests.UnitTests
                 Category = category
             };
 
-            _mockCategoryService.Setup(x => x.GetCategoryById(1)).Returns(category);
+            _mockCategoryRepository.Setup(x => x.GetCategoryById(1)).Returns(category);
             // Act
             var bookDto = _mapper.Map<BookDto>(book);
             var mappedBackBook = _mapper.Map<Book>(bookDto);

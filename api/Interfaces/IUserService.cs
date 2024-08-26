@@ -2,19 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.DTOs;
 using api.Models;
 
 namespace api.Interfaces
 {
     public interface IUserService
     {
-        public User GetUserWithStats(int userId);
-        void AddUser(User user);
+        UserDto GetUserWithStats(int userId);
+        void AddUser(UserForCreationDto userDto);
         string Authenticate(string username, string password);
-        void UpdateUser(User user);
-        User GetByUserId(int id);
+        void UpdateUser(UserForUpdateDto userDto);
+        UserDto GetByUserId(int id);
 
-        User GetByUsername(string username);
+        UserDto GetByUsername(string username);
 
         bool DeleteUser(int id);
     }

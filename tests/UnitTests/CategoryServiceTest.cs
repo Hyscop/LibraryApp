@@ -8,33 +8,45 @@ using api.Interfaces;
 using api.Services;
 using api.Models;
 using FluentAssertions;
+using AutoMapper;
+using api.DTOs;
 
 namespace tests.UnitTests
 {
     public class CategoryServiceTest
     {
         private readonly Mock<ICategoryRepository> _mockCategoryRepository;
+        private readonly Mock<IMapper> _mockMapper;
         private readonly CategoryService _categoryService;
 
 
         public CategoryServiceTest()
         {
             _mockCategoryRepository = new Mock<ICategoryRepository>();
+            _mockMapper = new Mock<IMapper>();
 
-            _categoryService = new CategoryService(_mockCategoryRepository.Object);
+            _categoryService = new CategoryService(_mockCategoryRepository.Object, _mockMapper.Object);
         }
 
         [Fact]
         public void CategoryService_AddCategory_ShouldAddCategoryToRepository()
         {
             //Arrange
+
+            var categoryDto = new CategoryDto
+            {
+                CategoryName = "Fiction"
+            };
+
             var category = new Category
             {
                 CategoryName = "Fiction"
             };
+
+            _mockMapper.Setup(m => m.Map<Category>(categoryDto)).Returns(category);
             //Act
 
-            _categoryService.AddCategory(category);
+            _categoryService.AddCategory(categoryDto);
 
             //Assert
 
@@ -104,6 +116,12 @@ namespace tests.UnitTests
                 CategoryName = "Fiction"
             };
 
+            var updatedCategoryDto = new CategoryDto
+            {
+                CategoryId = 1,
+                CategoryName = "Action"
+            };
+
             var updatedCategory = new Category
             {
                 CategoryId = 1,
@@ -112,11 +130,10 @@ namespace tests.UnitTests
 
 
             _mockCategoryRepository.Setup(repo => repo.GetCategoryById(1)).Returns(existingCategory);
-
+            _mockMapper.Setup(m => m.Map<Category>(updatedCategoryDto)).Returns(updatedCategory);
             _mockCategoryRepository.Setup(repo => repo.UpdateCategory(It.IsAny<Category>())).Verifiable();
-
             // Act
-            _categoryService.UpdateCategory(updatedCategory);
+            _categoryService.UpdateCategory(updatedCategoryDto);
             // Assert
             _mockCategoryRepository.Verify(repo => repo.UpdateCategory(It.Is<Category>(c => c.CategoryId == 1 && c.CategoryName == "Action")), Times.Once);
         }

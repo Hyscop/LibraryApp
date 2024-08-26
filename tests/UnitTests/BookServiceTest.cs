@@ -11,6 +11,8 @@ using api.Services;
 using api.Repositories;
 using System.IO.Compression;
 using System.Diagnostics;
+using AutoMapper;
+using api.DTOs;
 
 
 public class BookServiceTest
@@ -18,11 +20,13 @@ public class BookServiceTest
 
     private readonly Mock<IBookRepository> _mockBookRepository;
     private readonly BookService _bookService;
+    private readonly Mock<IMapper> _mockMapper;
 
     public BookServiceTest()
     {
         _mockBookRepository = new Mock<IBookRepository>();
-        _bookService = new BookService(_mockBookRepository.Object);
+        _mockMapper = new Mock<IMapper>();
+        _bookService = new BookService(_mockBookRepository.Object, _mockMapper.Object);
     }
 
     [Fact]
@@ -46,7 +50,24 @@ public class BookServiceTest
             }
         };
 
+        var bookDtos = new List<BookDto>
+    {
+        new BookDto{
+            Id = 1,
+            Title = "Test Book 1",
+            Author = "Author 1",
+            TotalPages = 100
+        },
+        new BookDto{
+            Id = 2,
+            Title = "Test Book 2",
+            Author = "Author 2",
+            TotalPages = 200
+        }
+    };
+
         _mockBookRepository.Setup(repo => repo.GetBooks()).Returns(books);
+        _mockMapper.Setup(m => m.Map<List<BookDto>>(books)).Returns(bookDtos);
 
         //Act
 
@@ -57,7 +78,7 @@ public class BookServiceTest
 
         result.Should().NotBeNull();
         result.Should().HaveCount(2);
-        result.Should().Contain(books);
+        result.Should().Contain(bookDtos);
     }
 
     [Fact]
@@ -65,11 +86,20 @@ public class BookServiceTest
     {
         //Arrange
 
+        var bookDto = new BookDto
+        {
+            Author = "Test Author",
+            Title = "Test Book",
+            TotalPages = 100
+        };
+
+
         var book = new Book { Author = "Test Author", Title = "Test Book", TotalPages = 100 };
+        _mockMapper.Setup(m => m.Map<Book>(bookDto)).Returns(book);
 
         //Act
 
-        _bookService.AddBook(book);
+        _bookService.AddBook(bookDto);
 
 
         //Assert
@@ -109,40 +139,41 @@ public class BookServiceTest
     [Fact]
     public void BookService_UpdateBook_ShouldUpdateBookDetails()
     {
-
-        //Arrange
-
-        var book = new Book
+        // Arrange
+        var bookId = 1;
+        var existingBook = new Book
         {
-            Id = 1,
+            Id = bookId,
             Author = "First Author",
             Title = "First Title",
             TotalPages = 50
-
         };
-        var updatedBook = book;
-        updatedBook.Author = "Updated Author";
-        updatedBook.Title = "Updated Title";
-        updatedBook.TotalPages = 100;
 
-        _mockBookRepository.Setup(repo => repo.GetBookById(1)).Returns(book);
+        var updatedBookDto = new BookDto
+        {
+            Id = bookId,
+            Author = "Updated Author",
+            Title = "Updated Title",
+            TotalPages = 100
+        };
 
-        //Act
+        _mockBookRepository.Setup(repo => repo.GetBookById(bookId)).Returns(existingBook);
+        _mockMapper.Setup(m => m.Map(updatedBookDto, existingBook)).Verifiable();
 
-        _bookService.UpdateBook(updatedBook);
+        // Act
+        _bookService.UpdateBook(bookId, updatedBookDto);
 
-        //Assert
+        // Assert
+        _mockMapper.Verify(m => m.Map(updatedBookDto, existingBook), Times.Once);
+        _mockBookRepository.Verify(repo => repo.UpdateBook(existingBook), Times.Once);
 
-        _mockBookRepository.Verify(repo => repo.UpdateBook(It.Is<Book>(b => b.Title == "Updated Title" && b.Author == "Updated Author" && b.Id == 1 && b.TotalPages == 100)));
-
-        book.Title.Should().Be("Updated Title");
-        book.Author.Should().Be("Updated Author");
-        book.Id.Should().Be(1);
-        book.TotalPages.Should().Be(100);
-        book.TotalPages.Should().NotBe(50);
-
-
+        existingBook.Title.Should().Be("Updated Title");
+        existingBook.Author.Should().Be("Updated Author");
+        existingBook.Id.Should().Be(bookId);
+        existingBook.TotalPages.Should().Be(100);
+        existingBook.TotalPages.Should().NotBe(50);
     }
+
 
     [Fact]
     public void BookService_DeleteBook_ShouldReturnFalse_WhenBookDoesNotExist()

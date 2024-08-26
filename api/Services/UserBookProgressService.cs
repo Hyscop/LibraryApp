@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Interfaces;
 using api.Models;
+using AutoMapper;
+using api.DTOs;
 
 namespace api.Services
 {
@@ -15,14 +17,16 @@ namespace api.Services
         private readonly IBookRepository _bookRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserStatsRepository _userStatsRepository;
+        private readonly IMapper _mapper;
 
 
-        public UserBookProgressService(IUserBookProgressRepository progressRepository, IBookRepository bookRepository, IUserRepository userRepository, IUserStatsRepository userStatsRepository)
+        public UserBookProgressService(IUserBookProgressRepository progressRepository, IBookRepository bookRepository, IUserRepository userRepository, IUserStatsRepository userStatsRepository, IMapper mapper)
         {
             _progressRepository = progressRepository;
             _bookRepository = bookRepository;
             _userRepository = userRepository;
             _userStatsRepository = userStatsRepository;
+            _mapper = mapper;
         }
 
         public void FinishReadingBook(int userId, int bookId)
@@ -67,9 +71,15 @@ namespace api.Services
             _userRepository.UpdateUser(user);
         }
 
-        public UserBookProgress GetProgressByUserAndBook(int userId, int bookId)
+        public UserBookProgressDto GetProgressByUserAndBook(int userId, int bookId)
         {
-            return _progressRepository.GetProgressByUserAndBook(userId, bookId);
+            var progress = _progressRepository.GetProgressByUserAndBook(userId, bookId);
+            if (progress == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<UserBookProgressDto>(progress);
         }
 
         public void StartReadingBook(int userId, int bookId)

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.DTOs;
 using api.Interfaces;
 using api.Models;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories
@@ -12,15 +14,12 @@ namespace api.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly LibraryAppContext _context;
+
         public UserRepository(LibraryAppContext context)
         {
             _context = context;
         }
 
-        public User GetUserWithStats(int userId)
-        {
-            return _context.Users.Include(u => u.UserStats).SingleOrDefault(u => u.UserId == userId);
-        }
         public void AddUser(User user)
         {
             _context.Users.Add(user);
@@ -52,5 +51,11 @@ namespace api.Repositories
             _context.Users.Update(user);
             _context.SaveChanges();
         }
+
+        public User GetUserWithStats(int userId)
+        {
+            return _context.Users.Include(u => u.UserStats).SingleOrDefault(u => u.UserId == userId);
+        }
     }
+
 }

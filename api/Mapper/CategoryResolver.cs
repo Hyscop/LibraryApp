@@ -11,15 +11,33 @@ namespace api.Mapper
 {
     public class CategoryResolver : IValueResolver<BookDto, Book, Category>
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryResolver(ICategoryService categoryService)
+        public CategoryResolver(ICategoryRepository categoryService)
         {
-            _categoryService = categoryService;
+            _categoryRepository = categoryService;
         }
         public Category Resolve(BookDto source, Book destination, Category destMember, ResolutionContext context)
         {
-            return _categoryService.GetCategoryById(source.CategoryId);
+            if (source.CategoryId == 0) // Assuming 0 means no valid category
+            {
+                return null;
+            }
+
+            // Fetch the existing category from the repository using the ID
+            var category = _categoryRepository.GetCategoryById(source.CategoryId);
+
+            if (category != null)
+            {
+                return category; // Return the existing category
+            }
+
+            // If the category doesn't exist, create a new one
+            return new Category
+            {
+                CategoryId = source.CategoryId,
+                CategoryName = source.CategoryName
+            };
         }
     }
 }

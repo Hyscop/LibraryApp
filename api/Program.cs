@@ -40,7 +40,11 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("RegularUserOnly", policy => policy.RequireRole("RegularUser"));
+});
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddTransient<CategoryResolver>();
 

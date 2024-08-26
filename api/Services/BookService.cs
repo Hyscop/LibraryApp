@@ -5,34 +5,45 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Interfaces;
 using api.Models;
+using AutoMapper;
+using api.DTOs;
 
 namespace api.Services
 {
     public class BookService : IBookService
     {
         private readonly IBookRepository _bookRepository;
+        private readonly IMapper _mapper;
 
-        public BookService(IBookRepository bookRepository)
+        public BookService(IBookRepository bookRepository, IMapper mapper)
         {
+            _mapper = mapper;
             _bookRepository = bookRepository;
         }
-        public void AddBook(Book book)
+        public void AddBook(BookDto bookDto)
         {
+
+            var book = _mapper.Map<Book>(bookDto);
             _bookRepository.AddBook(book);
         }
 
-        public Book GetBookById(int id)
+        public BookDto GetBookById(int id)
         {
-            return _bookRepository.GetBookById(id);
+            var book = _bookRepository.GetBookById(id);
+            return _mapper.Map<BookDto>(book);
         }
 
-        public void UpdateBook(Book book)
+        public void UpdateBook(int id, BookDto bookDto)
         {
-            var existing = _bookRepository.GetBookById(book.Id);
-            if (existing != null)
+            var existingBook = _bookRepository.GetBookById(id);
+            if (existingBook == null)
             {
-                _bookRepository.UpdateBook(book);
+                throw new KeyNotFoundException("Book not found");
             }
+
+            _mapper.Map(bookDto, existingBook);
+
+            _bookRepository.UpdateBook(existingBook);
         }
 
         public bool DeleteBook(int id)
@@ -47,9 +58,10 @@ namespace api.Services
             return true;
         }
 
-        public IEnumerable<Book> GetBooks()
+        public IEnumerable<BookDto> GetBooks()
         {
-            return _bookRepository.GetBooks();
+            var books = _bookRepository.GetBooks();
+            return _mapper.Map<IEnumerable<BookDto>>(books);
         }
     }
 }

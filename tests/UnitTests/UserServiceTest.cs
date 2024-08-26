@@ -13,6 +13,8 @@ using System.Security.Cryptography;
 using System.IO.Compression;
 using Azure.Core.Pipeline;
 using Microsoft.AspNetCore.Identity;
+using AutoMapper;
+using api.DTOs;
 
 namespace tests.UnitTests
 {
@@ -21,6 +23,7 @@ namespace tests.UnitTests
         private readonly Mock<IUserRepository> _mockUserRepository;
         private readonly Mock<IJwtTokenService> _mockJwtTokenService;
         private readonly Mock<IPasswordHasher> _mockPasswordHasher;
+        private readonly Mock<IMapper> _mockMapper;
         private readonly UserService _userService;
 
         public UserServiceTest()
@@ -28,7 +31,8 @@ namespace tests.UnitTests
             _mockUserRepository = new Mock<IUserRepository>();
             _mockPasswordHasher = new Mock<IPasswordHasher>();
             _mockJwtTokenService = new Mock<IJwtTokenService>();
-            _userService = new UserService(_mockUserRepository.Object, _mockPasswordHasher.Object, _mockJwtTokenService.Object);
+            _mockMapper = new Mock<IMapper>();
+            _userService = new UserService(_mockUserRepository.Object, _mockPasswordHasher.Object, _mockJwtTokenService.Object, _mockMapper.Object);
         }
 
         //-------------------------------------------------------------------------------------------
@@ -95,10 +99,19 @@ namespace tests.UnitTests
         public void UserService_AddUser_ShouldAddUserToRepository()
         {
             // Arrange
+            var userDto = new UserForCreationDto
+            {
+                Username = "testuser",
+                Email = "test@example.com",
+                Password = "hashedpassword",
+                Role = UserRole.RegularUser
+            };
             var user = new User { Username = "testuser", Email = "test@example.com", PasswordHash = "hashedpassword", Role = UserRole.RegularUser };
 
+            _mockMapper.Setup(m => m.Map<User>(userDto)).Returns(user);
+
             // Act
-            _userService.AddUser(user);
+            _userService.AddUser(userDto);
 
             // Assert
             _mockUserRepository.Verify(repo => repo.AddUser(It.Is<User>(u => u.Username == "testuser")), Times.Once);
@@ -119,6 +132,15 @@ namespace tests.UnitTests
 
             };
 
+            var updatedUserDto = new UserForUpdateDto
+            {
+                UserId = 1,
+                Username = "Changed User",
+                Email = "changed@mail.com",
+                Password = "HAshPassword",
+                Role = UserRole.Admin
+            };
+
             var updatedUser = new User
             {
                 UserId = 1,
@@ -129,10 +151,11 @@ namespace tests.UnitTests
             };
 
             _mockUserRepository.Setup(repo => repo.GetByUserId(1)).Returns(existingUser);
+            _mockMapper.Setup(m => m.Map<User>(updatedUserDto)).Returns(updatedUser);
 
             //Act
 
-            _userService.UpdateUser(updatedUser);
+            _userService.UpdateUser(updatedUserDto);
 
             //Assert
 

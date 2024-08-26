@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using api.Interfaces;
 using api.Models;
 using api.Services;
+using AutoMapper;
 using Azure.Core.Pipeline;
 using FluentAssertions;
 using Moq;
@@ -21,7 +23,7 @@ namespace tests.UnitTests
         private readonly UserBookProgressService _userBookProgressService;
 
         private readonly Mock<IBookRepository> _mockBookRepository;
-
+        private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IUserRepository> _mockUserRepository;
         private readonly Mock<IUserStatsRepository> _mockUserStatsRepository;
 
@@ -33,10 +35,11 @@ namespace tests.UnitTests
 
             _mockUserRepository = new Mock<IUserRepository>();
 
+            _mockMapper = new Mock<IMapper>();
+
             _mockUserStatsRepository = new Mock<IUserStatsRepository>();
 
-            _userBookProgressService = new UserBookProgressService(_mockUserBookProgressRepository.Object, _mockBookRepository.Object, _mockUserRepository.Object, _mockUserStatsRepository.Object);
-
+            _userBookProgressService = new UserBookProgressService(_mockUserBookProgressRepository.Object, _mockBookRepository.Object, _mockUserRepository.Object, _mockUserStatsRepository.Object, _mockMapper.Object);
         }
 
         [Fact]

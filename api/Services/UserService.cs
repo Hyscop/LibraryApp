@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.DTOs;
 using api.Interfaces;
 using api.Models;
+using AutoMapper;
 
 namespace api.Services
 {
@@ -12,12 +14,14 @@ namespace api.Services
         private readonly IUserRepository _userRepository;
         private readonly IJwtTokenService _jwtTokenService;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService)
+        public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, IMapper mapper)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
             _jwtTokenService = jwtTokenService;
+            _mapper = mapper;
         }
 
         public string Authenticate(string username, string password)
@@ -31,13 +35,15 @@ namespace api.Services
             return _jwtTokenService.GenerateToken(user);
         }
 
-        public User GetUserWithStats(int userId)
+        public UserDto GetUserWithStats(int userId)
         {
-            return _userRepository.GetUserWithStats(userId);
+            var user = _userRepository.GetUserWithStats(userId);
+            return _mapper.Map<UserDto>(user);
         }
-        public void AddUser(User user)
+        public void AddUser(UserForCreationDto userDto)
         {
-            user.PasswordHash = _passwordHasher.HashPassword(user.PasswordHash);
+            var user = _mapper.Map<User>(userDto);
+            user.PasswordHash = _passwordHasher.HashPassword(userDto.Password);
             _userRepository.AddUser(user);
         }
 
@@ -54,35 +60,35 @@ namespace api.Services
             return true;
         }
 
-        public User GetByUserId(int id)
+        public UserDto GetByUserId(int id)
         {
-            return _userRepository.GetByUserId(id);
+
+            var user = _userRepository.GetByUserId(id);
+            return _mapper.Map<UserDto>(user);
         }
 
-        public User GetByUsername(string username)
+        public UserDto GetByUsername(string username)
         {
-            return _userRepository.GetByUsername(username);
+            var user = _userRepository.GetByUsername(username);
+            return _mapper.Map<UserDto>(user);
         }
 
-        public void UpdateUser(User user)
+        public void UpdateUser(UserForUpdateDto userDto)
         {
-
-            if (user == null)
+            var existingUser = _userRepository.GetByUserId(userDto.UserId);
+            if (existingUser == null)
             {
-                throw new ArgumentNullException(nameof(user), "No User Found");
+                throw new ArgumentNullException(nameof(existingUser), "No User Found");
             }
 
-            var existingUser = _userRepository.GetByUserId(user.UserId);
-            if (existingUser != null)
+            _mapper.Map(userDto, existingUser);
+
+            if (!string.IsNullOrEmpty(userDto.Password))
             {
-                existingUser.Username = user.Username;
-                existingUser.Email = user.Email;
-                existingUser.PasswordHash = user.PasswordHash;
-                existingUser.Role = user.Role;
-                _userRepository.UpdateUser(user);
+                existingUser.PasswordHash = _passwordHasher.HashPassword(userDto.Password);
             }
 
-
+            _userRepository.UpdateUser(existingUser);
         }
     }
 }

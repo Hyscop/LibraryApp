@@ -24,6 +24,14 @@ namespace api.Mapper
             CreateMap<Category, CategoryDto>()
                 .ReverseMap();
 
+            CreateMap<UserForCreationDto, User>()
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+                .ReverseMap();
+
+            CreateMap<UserForUpdateDto, User>()
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+                .ReverseMap();
+
             // User to UserDto and vice versa
             CreateMap<User, UserDto>()
                 .ReverseMap()

@@ -12,18 +12,22 @@ using Azure.Core.Pipeline;
 using FluentAssertions;
 using System.IO.Compression;
 using Microsoft.VisualBasic;
+using AutoMapper;
+using api.DTOs;
 
 namespace tests.UnitTests
 {
     public class UserStatsServiceTest
     {
         private readonly Mock<IUserStatsRepository> _mockUserStatsRepository;
+        private readonly Mock<IMapper> _mockMapper;
         private readonly UserStatsService _userStatsService;
 
         public UserStatsServiceTest()
         {
             _mockUserStatsRepository = new Mock<IUserStatsRepository>();
-            _userStatsService = new UserStatsService(_mockUserStatsRepository.Object);
+            _mockMapper = new Mock<IMapper>();
+            _userStatsService = new UserStatsService(_mockUserStatsRepository.Object, _mockMapper.Object);
         }
         [Fact]
         public void UserStatsService_GetUserStatsByUserId_ShouldReturnUserStats()
@@ -59,6 +63,14 @@ namespace tests.UnitTests
         public void UserStatsService_UpdateUserStats_ShouldUpdateStats()
         {
             //Arrange
+            var userStatsDto = new UserStatsDto
+            {
+                UserStatsId = 1,
+                UserId = 1,
+                TotalBooksRead = 7,
+                TotalPagesRead = 3000
+            };
+
             var userStats = new UserStats
             {
                 UserStatsId = 1,
@@ -67,14 +79,14 @@ namespace tests.UnitTests
                 TotalPagesRead = 3000
             };
 
-            _mockUserStatsRepository.Setup(repo => repo.GetUserStatsByUserId(userStats.UserId)).Returns(userStats);
+            _mockMapper.Setup(m => m.Map<UserStats>(userStatsDto)).Returns(userStats);
             _mockUserStatsRepository.Setup(repo => repo.UpdateUserStats(It.IsAny<UserStats>())).Verifiable();
 
             //Act
 
-            userStats.TotalBooksRead = 5;
-            userStats.TotalPagesRead = 1234;
-            _userStatsService.UpdateUserStats(userStats);
+            userStatsDto.TotalBooksRead = 5;
+            userStatsDto.TotalPagesRead = 1234;
+            _userStatsService.UpdateUserStats(userStatsDto);
 
             //Assert
 

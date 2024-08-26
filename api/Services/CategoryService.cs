@@ -2,29 +2,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.DTOs;
 using api.Interfaces;
 using api.Models;
+using AutoMapper;
 
 namespace api.Services
 {
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
-        public CategoryService(ICategoryRepository categoryRepository)
+        private readonly IMapper _mapper;
+        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
         {
             _categoryRepository = categoryRepository;
+            _mapper = mapper;
         }
 
-        public void AddCategory(Category category)
+        public void AddCategory(CategoryDto categoryDto)
         {
+            var category = _mapper.Map<Category>(categoryDto);
             _categoryRepository.AddCategory(category);
         }
 
         public bool DeleteCategory(int id)
         {
-            var existingCategory = _categoryRepository.GetCategoryById(id);
-
-            if (existingCategory == null)
+            var category = _categoryRepository.GetCategoryById(id);
+            if (category == null)
             {
                 return false;
             }
@@ -33,24 +37,28 @@ namespace api.Services
             return true;
         }
 
-        public IEnumerable<Category> GetCategories()
+        public IEnumerable<CategoryDto> GetCategories()
         {
-            return _categoryRepository.GetCategories();
+            var categories = _categoryRepository.GetCategories();
+            return _mapper.Map<IEnumerable<CategoryDto>>(categories);
         }
 
-        public Category GetCategoryById(int id)
+        public CategoryDto GetCategoryById(int id)
         {
-            return _categoryRepository.GetCategoryById(id);
+            var category = _categoryRepository.GetCategoryById(id);
+            return _mapper.Map<CategoryDto>(category);
         }
 
-        public void UpdateCategory(Category category)
+        public void UpdateCategory(CategoryDto categoryDto)
         {
-            var existingCategory = _categoryRepository.GetCategoryById(category.CategoryId);
-            if (existingCategory != null)
+            var existingCategory = _categoryRepository.GetCategoryById(categoryDto.CategoryId);
+            if (existingCategory == null)
             {
-                existingCategory.CategoryName = category.CategoryName;
-                _categoryRepository.UpdateCategory(existingCategory);
+                throw new ArgumentNullException(nameof(existingCategory), "Category not found");
             }
+
+            _mapper.Map(categoryDto, existingCategory);
+            _categoryRepository.UpdateCategory(existingCategory);
         }
     }
 }
