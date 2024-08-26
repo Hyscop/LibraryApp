@@ -1,14 +1,10 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using api.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using api.Interfaces;
+using api.DTOs;
 using api.Models;
-using api.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
@@ -16,36 +12,39 @@ namespace api.Controllers
     [Route("api/[controller]")]
     public class BookController : ControllerBase
     {
-        private readonly IBookService _bookService;
+        private readonly IBookRepository _bookRepository;
         private readonly IMapper _mapper;
-        public BookController(IBookService bookService, IMapper mapper)
+
+        public BookController(IBookRepository bookRepository, IMapper mapper)
         {
-            _bookService = bookService;
+            _bookRepository = bookRepository;
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("GetBooks")]
         [Authorize(Policy = "RegularUserOnly")]
         public IActionResult GetBooks()
         {
-            var books = _bookService.GetBooks();
-            return Ok(books);
+            var books = _bookRepository.GetBooks();
+            var bookDtos = _mapper.Map<IEnumerable<BookDto>>(books);
+            return Ok(bookDtos);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         [Authorize(Policy = "RegularUserOnly")]
-        public IActionResult GetBookById(int id)
+        public IActionResult GetBookById([FromRoute] int id)
         {
-            var book = _bookService.GetBookById(id);
+            var book = _bookRepository.GetBookById(id);
             if (book == null)
             {
                 return NotFound();
             }
 
-            return Ok(book);
+            var bookDto = _mapper.Map<BookDto>(book);
+            return Ok(bookDto);
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         [Authorize(Policy = "AdminOnly")]
         public IActionResult CreateBook([FromBody] BookDto bookDto)
         {
@@ -54,37 +53,44 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
 
+            var book = _mapper.Map<Book>(bookDto);
+            _bookRepository.AddBook(book);
 
-
-            _bookService.AddBook(bookDto);
-
-            return CreatedAtAction(nameof(GetBookById), new { id = bookDto.Id }, bookDto);
+            return CreatedAtAction(nameof(GetBookById), new { id = book.Id }, _mapper.Map<BookDto>(book));
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Update/{id}")]
         [Authorize(Policy = "AdminOnly")]
-        public IActionResult UpdateBook(int id, [FromBody] BookDto bookDto)
+        public IActionResult UpdateBook([FromRoute] int id, [FromBody] BookDto bookDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var book = _bookService.GetBookById(id);
-            if (book == null)
+
+            var existingBook = _bookRepository.GetBookById(id);
+            if (existingBook == null)
             {
                 return NotFound();
             }
 
-            _bookService.UpdateBook(id, bookDto);
+            _mapper.Map(bookDto, existingBook);
+            _bookRepository.UpdateBook(existingBook);
 
-            return NoContent();
+            return Ok(_mapper.Map<BookDto>(existingBook));
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         [Authorize(Policy = "AdminOnly")]
-        public IActionResult DeleteBook(int id)
+        public IActionResult DeleteBook([FromRoute] int id)
         {
-            _bookService.DeleteBook(id);
+            var existingBook = _bookRepository.GetBookById(id);
+            if (existingBook == null)
+            {
+                return NotFound();
+            }
+
+            _bookRepository.DeleteBook(id);
             return NoContent();
         }
     }

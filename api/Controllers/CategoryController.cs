@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using api.Interfaces;
 using api.DTOs;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using api.Models;
 
 namespace api.Controllers
 {
@@ -11,37 +11,39 @@ namespace api.Controllers
     [Route("api/[controller]")]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public CategoryController(ICategoryService categoryService, IMapper mapper)
+        public CategoryController(ICategoryRepository categoryRepository, IMapper mapper)
         {
-            _categoryService = categoryService;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("GetCategories")]
         [Authorize(Policy = "RegularUserOnly")]
         public IActionResult GetCategories()
         {
-            var categories = _categoryService.GetCategories();
-            return Ok(categories);
+            var categories = _categoryRepository.GetCategories();
+            var categoryDtos = _mapper.Map<IEnumerable<CategoryDto>>(categories);
+            return Ok(categoryDtos);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         [Authorize(Policy = "RegularUserOnly")]
         public IActionResult GetCategoryById(int id)
         {
-            var category = _categoryService.GetCategoryById(id);
+            var category = _categoryRepository.GetCategoryById(id);
             if (category == null)
             {
                 return NotFound();
             }
 
-            return Ok(category);
+            var categoryDto = _mapper.Map<CategoryDto>(category);
+            return Ok(categoryDto);
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         [Authorize(Policy = "AdminOnly")]
         public IActionResult CreateCategory([FromBody] CategoryDto categoryDto)
         {
@@ -50,12 +52,13 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
 
-            _categoryService.AddCategory(categoryDto);
+            var category = _mapper.Map<Category>(categoryDto);
+            _categoryRepository.AddCategory(category);
 
-            return CreatedAtAction(nameof(GetCategoryById), new { id = categoryDto.CategoryId }, categoryDto);
+            return CreatedAtAction(nameof(GetCategoryById), new { id = category.CategoryId }, _mapper.Map<CategoryDto>(category));
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("/Update{id}")]
         [Authorize(Policy = "AdminOnly")]
         public IActionResult UpdateCategory(int id, [FromBody] CategoryDto categoryDto)
         {
@@ -64,22 +67,29 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var category = _categoryService.GetCategoryById(id);
-            if (category == null)
+            var existingCategory = _categoryRepository.GetCategoryById(id);
+            if (existingCategory == null)
             {
                 return NotFound();
             }
 
-            _categoryService.UpdateCategory(categoryDto);
+            _mapper.Map(categoryDto, existingCategory);
+            _categoryRepository.UpdateCategory(existingCategory);
 
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         [Authorize(Policy = "AdminOnly")]
         public IActionResult DeleteCategory(int id)
         {
-            _categoryService.DeleteCategory(id);
+            var existingCategory = _categoryRepository.GetCategoryById(id);
+            if (existingCategory == null)
+            {
+                return NotFound();
+            }
+
+            _categoryRepository.DeleteCategory(id);
             return NoContent();
         }
     }

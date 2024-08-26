@@ -20,10 +20,10 @@ namespace api.Services
             }
         }
 
-        public bool VerifyPassword(string password, string hashedPassword)
+        public bool VerifyPassword(string hashedPassword, string providedPassword)
         {
-            var hashedInput = HashPassword(password);
-            return hashedInput == hashedPassword;
+            var providedHashed = HashPassword(providedPassword);
+            return hashedPassword == providedHashed;
         }
     }
 }
