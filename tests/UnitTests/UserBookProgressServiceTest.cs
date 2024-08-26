@@ -253,7 +253,7 @@ namespace tests.UnitTests
             {
                 UserStatsId = 1,
                 UserId = 1,
-                TotalBookRead = 5,
+                TotalBooksRead = 5,
 
             };
 
@@ -275,7 +275,7 @@ namespace tests.UnitTests
 
             _mockUserStatsRepository.Verify(repo => repo.UpdateUserStats(It.Is<UserStats>(s =>
             s.UserId == userId &&
-            s.TotalBookRead == 6)), Times.Once);
+            s.TotalBooksRead == 6)), Times.Once);
         }
 
         [Fact]

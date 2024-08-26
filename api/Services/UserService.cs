@@ -10,12 +10,25 @@ namespace api.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IJwtTokenService _jwtTokenService;
         private readonly IPasswordHasher _passwordHasher;
 
-        public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher)
+        public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
+            _jwtTokenService = jwtTokenService;
+        }
+
+        public string Authenticate(string username, string password)
+        {
+            var user = _userRepository.GetByUsername(username);
+            if (user == null || !_passwordHasher.VerifyPassword(user.PasswordHash, password))
+            {
+                return null;
+            }
+
+            return _jwtTokenService.GenerateToken(user);
         }
 
         public User GetUserWithStats(int userId)
@@ -28,16 +41,6 @@ namespace api.Services
             _userRepository.AddUser(user);
         }
 
-        public User AuthenticateUser(string username, string password)
-        {
-            var user = _userRepository.GetByUsername(username);
-            if (user == null || !_passwordHasher.VerifyPassword(password, user.PasswordHash))
-            {
-                return null;
-            }
-
-            return user;
-        }
 
         public bool DeleteUser(int id)
         {

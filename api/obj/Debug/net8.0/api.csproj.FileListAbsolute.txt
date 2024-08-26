@@ -295,3 +295,4 @@ c:\Users\mduma\Documents\GitHub\LibraryApp\api\obj\Debug\net8.0\refint\api.dll
 c:\Users\mduma\Documents\GitHub\LibraryApp\api\obj\Debug\net8.0\api.pdb
 c:\Users\mduma\Documents\GitHub\LibraryApp\api\obj\Debug\net8.0\api.genruntimeconfig.cache
 c:\Users\mduma\Documents\GitHub\LibraryApp\api\obj\Debug\net8.0\ref\api.dll
+C:\Users\mduma\Documents\GitHub\LibraryApp\api\bin\Debug\net8.0\AutoMapper.dll

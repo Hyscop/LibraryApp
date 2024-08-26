@@ -35,7 +35,7 @@ namespace tests.UnitTests
             {
                 UserStatsId = 1,
                 UserId = userId,
-                TotalBookRead = 5,
+                TotalBooksRead = 5,
                 TotalPagesRead = 1234
 
             };
@@ -50,7 +50,7 @@ namespace tests.UnitTests
 
             result.Should().NotBeNull();
             result.UserId.Should().Be(userId);
-            result.TotalBookRead.Should().Be(5);
+            result.TotalBooksRead.Should().Be(5);
             result.TotalPagesRead.Should().Be(1234);
 
         }
@@ -63,7 +63,7 @@ namespace tests.UnitTests
             {
                 UserStatsId = 1,
                 UserId = 1,
-                TotalBookRead = 7,
+                TotalBooksRead = 7,
                 TotalPagesRead = 3000
             };
 
@@ -72,13 +72,13 @@ namespace tests.UnitTests
 
             //Act
 
-            userStats.TotalBookRead = 5;
+            userStats.TotalBooksRead = 5;
             userStats.TotalPagesRead = 1234;
             _userStatsService.UpdateUserStats(userStats);
 
             //Assert
 
-            _mockUserStatsRepository.Verify(repo => repo.UpdateUserStats(It.Is<UserStats>(us => us.TotalBookRead == 5 && us.TotalPagesRead == 1234)), Times.Once);
+            _mockUserStatsRepository.Verify(repo => repo.UpdateUserStats(It.Is<UserStats>(us => us.TotalBooksRead == 5 && us.TotalPagesRead == 1234)), Times.Once);
 
         }
 
@@ -91,7 +91,7 @@ namespace tests.UnitTests
             {
                 UserStatsId = 1,
                 UserId = userId,
-                TotalBookRead = 5,
+                TotalBooksRead = 5,
                 TotalPagesRead = 1000
             };
 
@@ -104,7 +104,7 @@ namespace tests.UnitTests
 
             // Assert
 
-            _mockUserStatsRepository.Verify(repo => repo.UpdateUserStats(It.Is<UserStats>(us => us.TotalBookRead == 6)), Times.Once);
+            _mockUserStatsRepository.Verify(repo => repo.UpdateUserStats(It.Is<UserStats>(us => us.TotalBooksRead == 6)), Times.Once);
         }
 
         [Fact]
@@ -117,7 +117,7 @@ namespace tests.UnitTests
             {
                 UserStatsId = 1,
                 UserId = userId,
-                TotalBookRead = 5,
+                TotalBooksRead = 5,
                 TotalPagesRead = 150
             };
 
@@ -143,7 +143,7 @@ namespace tests.UnitTests
             {
                 UserStatsId = 1,
                 UserId = userId,
-                TotalBookRead = 5,
+                TotalBooksRead = 5,
                 TotalPagesRead = 1000
             };
 
@@ -155,7 +155,7 @@ namespace tests.UnitTests
 
             // Arrange
 
-            _mockUserStatsRepository.Verify(repo => repo.UpdateUserStats(It.Is<UserStats>(us => us.TotalBookRead == 0 && us.TotalPagesRead == 0)), Times.Once);
+            _mockUserStatsRepository.Verify(repo => repo.UpdateUserStats(It.Is<UserStats>(us => us.TotalBooksRead == 0 && us.TotalPagesRead == 0)), Times.Once);
         }
 
 

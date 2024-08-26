@@ -59,7 +59,7 @@ namespace api.Services
 
             if (userStats != null)
             {
-                userStats.TotalBookRead += 1;
+                userStats.TotalBooksRead += 1;
                 userStats.TotalPagesRead += book.TotalPages;
                 _userStatsRepository.UpdateUserStats(userStats);
             }

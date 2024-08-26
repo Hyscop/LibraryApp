@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace api.Models
+namespace api.DTOs
 {
-    public class UserStats
+    public class UserStatsDto
     {
         public int UserStatsId { get; set; }
-        public int UserId { get; set; }
         public int TotalBooksRead { get; set; }
         public int TotalPagesRead { get; set; }
-
-        public User User { get; set; }
-
     }
 }

@@ -2,6 +2,7 @@
 using System.Text;
 using api.Data;
 using api.Interfaces;
+using api.Mapper;
 using api.Repositories;
 using api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,7 +41,10 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddTransient<CategoryResolver>();
 
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 // Register repositories
@@ -70,7 +74,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
+app.MapControllers();
 
 app.Run();
 

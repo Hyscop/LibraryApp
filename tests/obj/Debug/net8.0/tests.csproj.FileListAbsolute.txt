@@ -321,3 +321,4 @@ c:\Users\mduma\Documents\GitHub\LibraryApp\tests\obj\Debug\net8.0\refint\tests.d
 c:\Users\mduma\Documents\GitHub\LibraryApp\tests\obj\Debug\net8.0\tests.pdb
 c:\Users\mduma\Documents\GitHub\LibraryApp\tests\obj\Debug\net8.0\tests.genruntimeconfig.cache
 c:\Users\mduma\Documents\GitHub\LibraryApp\tests\obj\Debug\net8.0\ref\tests.dll
+C:\Users\mduma\Documents\GitHub\LibraryApp\tests\bin\Debug\net8.0\AutoMapper.dll

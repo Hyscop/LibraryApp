@@ -19,6 +19,7 @@ namespace tests.UnitTests
     public class UserServiceTest
     {
         private readonly Mock<IUserRepository> _mockUserRepository;
+        private readonly Mock<IJwtTokenService> _mockJwtTokenService;
         private readonly Mock<IPasswordHasher> _mockPasswordHasher;
         private readonly UserService _userService;
 
@@ -26,7 +27,8 @@ namespace tests.UnitTests
         {
             _mockUserRepository = new Mock<IUserRepository>();
             _mockPasswordHasher = new Mock<IPasswordHasher>();
-            _userService = new UserService(_mockUserRepository.Object, _mockPasswordHasher.Object);
+            _mockJwtTokenService = new Mock<IJwtTokenService>();
+            _userService = new UserService(_mockUserRepository.Object, _mockPasswordHasher.Object, _mockJwtTokenService.Object);
         }
 
         //-------------------------------------------------------------------------------------------
@@ -188,69 +190,40 @@ namespace tests.UnitTests
         }
 
         //-------------------------------------------------------------------------------------------
+
         [Fact]
-
-        public void UserService_Authentication_ShouldReturnUser_WhenCredentialsAreCorrect()
+        public void Authenticate_ShouldReturnToken_WhenCredentialsAreValid()
         {
-            //Arrange
+            // Arrange
             var username = "testuser";
-            var password = "testpassword";
-            var passwordHasher = new PasswordHasher();
-            var hashedPassword = passwordHasher.HashPassword(password);
-
-            var user = new User
-            {
-                UserId = 1,
-                Username = username,
-                Email = "test@mail.com",
-                PasswordHash = hashedPassword,
-                Role = UserRole.RegularUser
-            };
+            var password = "password";
+            var user = new User { Username = username, PasswordHash = "hashedPassword" };
 
             _mockUserRepository.Setup(repo => repo.GetByUsername(username)).Returns(user);
+            _mockPasswordHasher.Setup(hasher => hasher.VerifyPassword("hashedPassword", password)).Returns(true);
+            _mockJwtTokenService.Setup(service => service.GenerateToken(user)).Returns("token");
 
-            var userService = new UserService(_mockUserRepository.Object, passwordHasher);
+            // Act
+            var result = _userService.Authenticate(username, password);
 
-            //Act
-            var result = userService.AuthenticateUser(username, password);
-
-            //Assert
-
+            // Assert
             result.Should().NotBeNull();
-            result.Username.Should().Be(username);
-            result.PasswordHash.Should().Be(hashedPassword);
-
+            result.Should().Be("token");
         }
 
         [Fact]
-
-        public void UserService_Authentication_ShouldReturnNull_WhenCredentialsIncorrect()
+        public void Authenticate_ShouldReturnNull_WhenCredentialsAreInvalid()
         {
-            //Arrange
+            // Arrange
             var username = "testuser";
-            var correctPassword = "correct";
-            var incorrectPassword = "incorrect";
+            var password = "wrongpassword";
 
-            var passwordHasher = new PasswordHasher();
-            var hashedPassword = passwordHasher.HashPassword(correctPassword);
+            _mockUserRepository.Setup(repo => repo.GetByUsername(username)).Returns((User)null);
 
-            var user = new User
-            {
-                UserId = 1,
-                Username = username,
-                Email = "test@mail.com",
-                PasswordHash = hashedPassword,
-                Role = UserRole.RegularUser
-            };
+            // Act
+            var result = _userService.Authenticate(username, password);
 
-            _mockUserRepository.Setup(repo => repo.GetByUsername(username)).Returns(user);
-
-            var userService = new UserService(_mockUserRepository.Object, passwordHasher);
-            //Act
-
-            var result = userService.AuthenticateUser(username, incorrectPassword);
-            //Assert
-
+            // Assert
             result.Should().BeNull();
         }
 

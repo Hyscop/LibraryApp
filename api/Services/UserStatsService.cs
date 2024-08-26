@@ -25,7 +25,7 @@ namespace api.Services
             var userStats = _userStatsRepository.GetUserStatsByUserId(userId);
             if (userStats != null)
             {
-                userStats.TotalBookRead += 1;
+                userStats.TotalBooksRead += 1;
                 _userStatsRepository.UpdateUserStats(userStats);
             }
         }
@@ -47,7 +47,7 @@ namespace api.Services
 
             if (userStats != null)
             {
-                userStats.TotalBookRead = 0;
+                userStats.TotalBooksRead = 0;
                 userStats.TotalPagesRead = 0;
                 _userStatsRepository.UpdateUserStats(userStats);
             }
@@ -58,7 +58,7 @@ namespace api.Services
             var existingStats = _userStatsRepository.GetUserStatsByUserId(userStats.UserId);
             if (existingStats != null)
             {
-                existingStats.TotalBookRead = userStats.TotalBookRead;
+                existingStats.TotalBooksRead = userStats.TotalBooksRead;
                 existingStats.TotalPagesRead = userStats.TotalPagesRead;
 
                 _userStatsRepository.UpdateUserStats(existingStats);

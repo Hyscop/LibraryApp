@@ -10,7 +10,7 @@ namespace api.Interfaces
     {
         public User GetUserWithStats(int userId);
         void AddUser(User user);
-        User AuthenticateUser(string username, string password);
+        string Authenticate(string username, string password);
         void UpdateUser(User user);
         User GetByUserId(int id);
 

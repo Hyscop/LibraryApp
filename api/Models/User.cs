@@ -12,7 +12,6 @@ namespace api.Models
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public UserRole Role { get; set; }
-
         public UserStats UserStats { get; set; }
         public ICollection<UserBookProgress> UserBookProgresses { get; set; }
         public ICollection<Book> FinishedBooks { get; set; }
