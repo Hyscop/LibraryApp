@@ -118,10 +118,9 @@ namespace tests.UnitTests
         }
         //-------------------------------------------------------------------------------------------
         [Fact]
-
         public void UserService_UpdateUser_ShouldUpdateUserDetails()
         {
-            //Arrange
+            // Arrange
             var existingUser = new User
             {
                 UserId = 1,
@@ -129,7 +128,6 @@ namespace tests.UnitTests
                 Email = "og@mail.com",
                 PasswordHash = "passwordHash",
                 Role = UserRole.RegularUser
-
             };
 
             var updatedUserDto = new UserForUpdateDto
@@ -137,40 +135,34 @@ namespace tests.UnitTests
                 UserId = 1,
                 Username = "Changed User",
                 Email = "changed@mail.com",
-                Password = "HAshPassword",
+                Password = "newPassword",
                 Role = UserRole.Admin
             };
 
-            var updatedUser = new User
-            {
-                UserId = 1,
-                Username = "Changeed User",
-                Email = "changed@mail.com",
-                PasswordHash = "HAshPassword",
-                Role = UserRole.Admin
-            };
-
+            // Mock the repository to return the existing user when queried
             _mockUserRepository.Setup(repo => repo.GetByUserId(1)).Returns(existingUser);
-            _mockMapper.Setup(m => m.Map<User>(updatedUserDto)).Returns(updatedUser);
 
-            //Act
-
+            // Act
             _userService.UpdateUser(updatedUserDto);
 
-            //Assert
+            // Assert
+            _mockUserRepository.Verify(repo => repo.UpdateUser(It.Is<User>(u =>
+                u.UserId == 1 &&
+                u.Username == "Changed User" &&
+                u.Email == "changed@mail.com" &&
+                u.PasswordHash != "passwordHash" && // Ensure the password was hashed and updated
+                u.Role == UserRole.Admin)), Times.Once);
 
-            _mockUserRepository.Verify(repo => repo.UpdateUser(It.Is<User>(u => u.UserId == 1 &&
-            u.Username == "Changeed User" &&
-            u.Email == "changed@mail.com" &&
-            u.PasswordHash == "HAshPassword" &&
-            u.Role == UserRole.Admin)), Times.Once);
-
+            // Validate the existingUser object has been updated correctly
             existingUser.UserId.Should().Be(1);
-            existingUser.Username.Should().Be("Changeed User");
-            existingUser.PasswordHash.Should().Be("HAshPassword");
+            existingUser.Username.Should().Be("Changed User");
             existingUser.Email.Should().Be("changed@mail.com");
             existingUser.Role.Should().Be(UserRole.Admin);
+            // Assuming you have a password hasher, verify that the password has been hashed correctly
+            _mockPasswordHasher.Verify(ph => ph.HashPassword("newPassword"), Times.Once);
         }
+
+
         //-------------------------------------------------------------------------------------------
         [Fact]
         public void UserService_DeleteUser_ShouldReturnTrue_WhenUserExists()

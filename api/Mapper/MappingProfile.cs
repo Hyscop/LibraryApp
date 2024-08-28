@@ -40,6 +40,7 @@ namespace api.Mapper
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
 
 
+
             // User to UserDto and vice versa
             CreateMap<User, UserDto>()
                 .ReverseMap()

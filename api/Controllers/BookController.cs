@@ -23,6 +23,7 @@ namespace api.Controllers
 
         [HttpGet("GetBooks")]
         //  [Authorize(Policy = "RegularUserOnly")]
+        // [Authorize(Roles = "RegularUser")]
         public IActionResult GetBooks()
         {
             var books = _bookRepository.GetBooks();
@@ -32,6 +33,7 @@ namespace api.Controllers
 
         [HttpGet("GetById/{id}")]
         //[Authorize(Policy = "RegularUserOnly")]
+        //[Authorize(Roles = "RegularUser")]
         public IActionResult GetBookById([FromRoute] int id)
         {
             var book = _bookRepository.GetBookById(id);
@@ -47,6 +49,8 @@ namespace api.Controllers
         [HttpPost("Create")]
         //[Authorize(Policy = "AdminOnly")]
         public IActionResult CreateBook([FromBody] BookForCreationDto bookDto)
+        //   [Authorize(Roles = "Admin")]
+
         {
             if (!ModelState.IsValid)
             {
@@ -56,12 +60,13 @@ namespace api.Controllers
             var book = _mapper.Map<Book>(bookDto);
             _bookRepository.AddBook(book);
 
-            return CreatedAtAction(nameof(GetBookById), new { id = book.Id }, _mapper.Map<BookDto>(book));
+            return CreatedAtAction(nameof(GetBookById), "Book", new { id = book.Id }, _mapper.Map<BookDto>(book));
         }
 
         [HttpPut("Update/{id}")]
         //[Authorize(Policy = "AdminOnly")]
         public IActionResult UpdateBook([FromRoute] int id, [FromBody] BookForUpdateDto bookDto)
+        //   [Authorize(Roles = "Admin")
         {
             if (!ModelState.IsValid)
             {
@@ -83,6 +88,7 @@ namespace api.Controllers
 
         [HttpDelete("Delete/{id}")]
         //[Authorize(Policy = "AdminOnly")]
+        //  [Authorize(Roles = "Admin")]
         public IActionResult DeleteBook([FromRoute] int id)
         {
             var existingBook = _bookRepository.GetBookById(id);

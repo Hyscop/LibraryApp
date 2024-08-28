@@ -52,6 +52,7 @@ namespace api.Controllers
             }
 
             var token = _jwtTokenService.GenerateToken(user);
+
             return Ok(new { Token = token });
         }
     }
