@@ -21,16 +21,16 @@ namespace api.Controllers
         }
 
         [HttpGet("GetCategories")]
-        [Authorize(Policy = "RegularUserOnly")]
+        //[Authorize(Policy = "RegularUserOnly")]
         public IActionResult GetCategories()
         {
             var categories = _categoryRepository.GetCategories();
-            var categoryDtos = _mapper.Map<IEnumerable<CategoryDto>>(categories);
+            var categoryDtos = _mapper.Map<IEnumerable<CategoryForUpdateDto>>(categories);
             return Ok(categoryDtos);
         }
 
         [HttpGet("GetById/{id}")]
-        [Authorize(Policy = "RegularUserOnly")]
+        //[Authorize(Policy = "RegularUserOnly")]
         public IActionResult GetCategoryById(int id)
         {
             var category = _categoryRepository.GetCategoryById(id);
@@ -39,13 +39,13 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            var categoryDto = _mapper.Map<CategoryDto>(category);
+            var categoryDto = _mapper.Map<CategoryForUpdateDto>(category);
             return Ok(categoryDto);
         }
 
         [HttpPost("Create")]
-        [Authorize(Policy = "AdminOnly")]
-        public IActionResult CreateCategory([FromBody] CategoryDto categoryDto)
+        //[Authorize(Policy = "AdminOnly")]
+        public IActionResult CreateCategory([FromBody] CategoryForCreationDto categoryDto)
         {
             if (!ModelState.IsValid)
             {
@@ -55,12 +55,12 @@ namespace api.Controllers
             var category = _mapper.Map<Category>(categoryDto);
             _categoryRepository.AddCategory(category);
 
-            return CreatedAtAction(nameof(GetCategoryById), new { id = category.CategoryId }, _mapper.Map<CategoryDto>(category));
+            return CreatedAtAction(nameof(GetCategoryById), new { id = category.CategoryId }, category);
         }
 
         [HttpPut("/Update{id}")]
-        [Authorize(Policy = "AdminOnly")]
-        public IActionResult UpdateCategory(int id, [FromBody] CategoryDto categoryDto)
+        //[Authorize(Policy = "AdminOnly")]
+        public IActionResult UpdateCategory(int id, [FromBody] CategoryForUpdateDto categoryDto)
         {
             if (!ModelState.IsValid)
             {
@@ -73,6 +73,8 @@ namespace api.Controllers
                 return NotFound();
             }
 
+            categoryDto.CategoryId = id;
+
             _mapper.Map(categoryDto, existingCategory);
             _categoryRepository.UpdateCategory(existingCategory);
 
@@ -80,7 +82,7 @@ namespace api.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Policy = "AdminOnly")]
+        //[Authorize(Policy = "AdminOnly")]
         public IActionResult DeleteCategory(int id)
         {
             var existingCategory = _categoryRepository.GetCategoryById(id);

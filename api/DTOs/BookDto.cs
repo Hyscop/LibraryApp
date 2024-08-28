@@ -14,4 +14,24 @@ namespace api.DTOs
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
     }
+
+    public class BookForCreationDto
+    {
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public int TotalPages { get; set; }
+        public int CategoryId { get; set; }
+
+
+    }
+
+    public class BookForUpdateDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public int TotalPages { get; set; }
+        public int CategoryId { get; set; }
+    }
+
 }

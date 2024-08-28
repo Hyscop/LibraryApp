@@ -19,7 +19,7 @@ namespace api.Services
             _mapper = mapper;
         }
 
-        public void AddCategory(CategoryDto categoryDto)
+        public void AddCategory(CategoryForCreationDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
             _categoryRepository.AddCategory(category);
@@ -37,19 +37,19 @@ namespace api.Services
             return true;
         }
 
-        public IEnumerable<CategoryDto> GetCategories()
+        public IEnumerable<CategoryForUpdateDto> GetCategories()
         {
             var categories = _categoryRepository.GetCategories();
-            return _mapper.Map<IEnumerable<CategoryDto>>(categories);
+            return _mapper.Map<IEnumerable<CategoryForUpdateDto>>(categories);
         }
 
-        public CategoryDto GetCategoryById(int id)
+        public CategoryForUpdateDto GetCategoryById(int id)
         {
             var category = _categoryRepository.GetCategoryById(id);
-            return _mapper.Map<CategoryDto>(category);
+            return _mapper.Map<CategoryForUpdateDto>(category);
         }
 
-        public void UpdateCategory(CategoryDto categoryDto)
+        public void UpdateCategory(CategoryForUpdateDto categoryDto)
         {
             var existingCategory = _categoryRepository.GetCategoryById(categoryDto.CategoryId);
             if (existingCategory == null)

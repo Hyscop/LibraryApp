@@ -136,7 +136,7 @@ namespace api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserStatsId"));
 
-                    b.Property<int>("TotalBookRead")
+                    b.Property<int>("TotalBooksRead")
                         .HasColumnType("int");
 
                     b.Property<int>("TotalPagesRead")
@@ -167,13 +167,13 @@ namespace api.Migrations
             modelBuilder.Entity("api.Models.UserBookProgress", b =>
                 {
                     b.HasOne("api.Models.Book", "Book")
-                        .WithMany()
+                        .WithMany("UserBookProgresses")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("api.Models.User", "User")
-                        .WithMany()
+                        .WithMany("UserBookProgresses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -194,6 +194,11 @@ namespace api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("api.Models.Book", b =>
+                {
+                    b.Navigation("UserBookProgresses");
+                });
+
             modelBuilder.Entity("api.Models.Category", b =>
                 {
                     b.Navigation("Books");
@@ -201,6 +206,8 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Models.User", b =>
                 {
+                    b.Navigation("UserBookProgresses");
+
                     b.Navigation("UserStats")
                         .IsRequired();
                 });

@@ -14,8 +14,8 @@ namespace api.Models
         public UserRole Role { get; set; }
         public UserStats UserStats { get; set; }
         public ICollection<UserBookProgress> UserBookProgresses { get; set; }
-        public ICollection<Book> FinishedBooks { get; set; }
     }
+
 
     public enum UserRole
     {

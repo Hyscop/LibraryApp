@@ -9,10 +9,10 @@ namespace api.Interfaces
 {
     public interface ICategoryService
     {
-        void AddCategory(CategoryDto categoryDto);
-        IEnumerable<CategoryDto> GetCategories();
-        CategoryDto GetCategoryById(int id);
-        void UpdateCategory(CategoryDto categoryDto);
+        void AddCategory(CategoryForCreationDto categoryDto);
+        IEnumerable<CategoryForUpdateDto> GetCategories();
+        CategoryForUpdateDto GetCategoryById(int id);
+        void UpdateCategory(CategoryForUpdateDto categoryDto);
         bool DeleteCategory(int id);
 
     }

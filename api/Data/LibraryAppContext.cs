@@ -43,6 +43,14 @@ namespace api.Data
                 .WithOne(ubp => ubp.Book)
                 .HasForeignKey(ubp => ubp.BookId);
 
+            modelBuilder.Entity<Category>()
+            .HasMany(c => c.Books)
+            .WithOne(b => b.Category)
+            .HasForeignKey(b => b.CategoryId);
+
+            modelBuilder.Entity<UserBookProgress>()
+           .HasKey(ubp => ubp.UserBookProgressId);
+
             // Finalizing the configuration
             base.OnModelCreating(modelBuilder);
         }

@@ -14,6 +14,5 @@ namespace api.DTOs
         public UserRole Role { get; set; }
         public UserStatsDto UserStats { get; set; }
         public ICollection<UserBookProgressDto> UserBookProgresses { get; set; }
-        public ICollection<BookDto> FinishedBooks { get; set; }
     }
 }

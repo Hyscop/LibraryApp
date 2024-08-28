@@ -15,14 +15,19 @@ namespace api.Mapper
         {
             // Book to BookDto and vice versa
             CreateMap<Book, BookDto>()
-                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Category.CategoryId))
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName))
-                .ReverseMap()
-                .ForMember(dest => dest.Category, opt => opt.MapFrom<CategoryResolver>()); // Handle Category mapping manually if needed
+            .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Category.CategoryId))
+            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName))
+            .ReverseMap();
+
+            CreateMap<BookForCreationDto, Book>();
+            CreateMap<BookForUpdateDto, Book>();
 
             // Category to CategoryDto and vice versa
-            CreateMap<Category, CategoryDto>()
+            CreateMap<Category, CategoryForCreationDto>()
                 .ReverseMap();
+
+            CreateMap<Category, CategoryForUpdateDto>()
+            .ReverseMap();
 
             CreateMap<UserLoginDto, User>();
 
