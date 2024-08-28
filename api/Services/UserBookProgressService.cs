@@ -39,37 +39,18 @@ namespace api.Services
 
             _progressRepository.DeleteProgress(progress);
 
-            var user = _userRepository.GetByUserId(userId);
-            var book = _bookRepository.GetBookById(bookId);
-
-            if (user == null || book == null)
-            {
-                throw new KeyNotFoundException("User or book not found");
-            }
-
-            if (user.FinishedBooks == null)
-            {
-                user.FinishedBooks = new List<Book>();
-            }
-
-            if (!user.FinishedBooks.Contains(book))
-            {
-                user.FinishedBooks.Add(book);
-            }
-
-
-
             var userStats = _userStatsRepository.GetUserStatsByUserId(userId);
 
             if (userStats != null)
             {
                 userStats.TotalBooksRead += 1;
-                userStats.TotalPagesRead += book.TotalPages;
+                userStats.TotalPagesRead += progress.Book.TotalPages;
                 _userStatsRepository.UpdateUserStats(userStats);
             }
-
-            _userRepository.UpdateUser(user);
         }
+
+
+
 
         public UserBookProgressDto GetProgressByUserAndBook(int userId, int bookId)
         {
