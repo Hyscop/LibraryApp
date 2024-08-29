@@ -1,12 +1,71 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\mduma\\Desktop\\LibraryApp\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F736E2CD-F8EC-46FD-A85B-F3EDA60DCFF0}|api\\api.csproj|c:\\users\\mduma\\documents\\github\\libraryapp\\api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F736E2CD-F8EC-46FD-A85B-F3EDA60DCFF0}|api\\api.csproj|solutionrelative:api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F736E2CD-F8EC-46FD-A85B-F3EDA60DCFF0}|api\\api.csproj|c:\\users\\mduma\\documents\\github\\libraryapp\\api\\services\\bookservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F736E2CD-F8EC-46FD-A85B-F3EDA60DCFF0}|api\\api.csproj|solutionrelative:api\\services\\bookservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F736E2CD-F8EC-46FD-A85B-F3EDA60DCFF0}|api\\api.csproj|c:\\users\\mduma\\documents\\github\\libraryapp\\api\\dtos\\bookdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F736E2CD-F8EC-46FD-A85B-F3EDA60DCFF0}|api\\api.csproj|solutionrelative:api\\dtos\\bookdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BookService.cs",
+              "DocumentMoniker": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\Services\\BookService.cs",
+              "RelativeDocumentMoniker": "api\\Services\\BookService.cs",
+              "ToolTip": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\Services\\BookService.cs",
+              "RelativeToolTip": "api\\Services\\BookService.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABIAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-28T08:37:21.645Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\Program.cs",
+              "RelativeDocumentMoniker": "api\\Program.cs",
+              "ToolTip": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\Program.cs",
+              "RelativeToolTip": "api\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAGYAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-28T08:36:48.93Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BookDto.cs",
+              "DocumentMoniker": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\DTOs\\BookDto.cs",
+              "RelativeDocumentMoniker": "api\\DTOs\\BookDto.cs",
+              "ToolTip": "C:\\Users\\mduma\\Documents\\GitHub\\LibraryApp\\api\\DTOs\\BookDto.cs",
+              "RelativeToolTip": "api\\DTOs\\BookDto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-28T08:36:35.086Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
