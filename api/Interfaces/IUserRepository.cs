@@ -14,7 +14,7 @@ namespace api.Interfaces
         void UpdateUser(User userDto);
         User GetByUserId(int id);
         User GetByUsername(String username);
-
+        IEnumerable<User> GetAllUsers();
         void DeleteUser(int id);
     }
 }

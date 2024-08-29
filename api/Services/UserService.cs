@@ -24,16 +24,6 @@ namespace api.Services
             _mapper = mapper;
         }
 
-        public string Authenticate(string username, string password)
-        {
-            var user = _userRepository.GetByUsername(username);
-            if (user == null || !_passwordHasher.VerifyPassword(user.PasswordHash, password))
-            {
-                return null;
-            }
-
-            return _jwtTokenService.GenerateToken(user);
-        }
 
         public UserDto GetUserWithStats(int userId)
         {

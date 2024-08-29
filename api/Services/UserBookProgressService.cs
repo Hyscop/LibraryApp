@@ -39,6 +39,14 @@ namespace api.Services
 
             _progressRepository.DeleteProgress(progress);
 
+            var user = _userRepository.GetByUserId(userId);
+            var book = _bookRepository.GetBookById(bookId);
+
+            if (user == null || book == null)
+            {
+                throw new KeyNotFoundException("User or Book not found");
+            }
+
             var userStats = _userStatsRepository.GetUserStatsByUserId(userId);
 
             if (userStats != null)
@@ -47,6 +55,8 @@ namespace api.Services
                 userStats.TotalPagesRead += progress.Book.TotalPages;
                 _userStatsRepository.UpdateUserStats(userStats);
             }
+
+            _userRepository.UpdateUser(user);
         }
 
 
@@ -102,6 +112,18 @@ namespace api.Services
 
 
             _progressRepository.UpdateProgress(progress);
+        }
+
+        public IEnumerable<UserBookProgressDto> GetCurrentReadingBooks(int userId)
+        {
+            var userProgresses = _progressRepository.GetProgressesByUserId(userId);
+
+            if (userProgresses == null || !userProgresses.Any())
+            {
+                throw new KeyNotFoundException("No reading progress found for this user.");
+            }
+
+            return _mapper.Map<IEnumerable<UserBookProgressDto>>(userProgresses);
         }
     }
 }

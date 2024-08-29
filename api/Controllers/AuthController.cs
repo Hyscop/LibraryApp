@@ -38,7 +38,7 @@ namespace api.Controllers
             _userRepository.AddUser(user);
 
             var userToReturn = _mapper.Map<UserDto>(user);
-            return CreatedAtAction(nameof(UserController.GetUserWithStats), "User", new { id = userToReturn.UserId }, userToReturn);
+            return CreatedAtAction(nameof(UserController.GetUserStats), "User", new { id = userToReturn.UserId }, userToReturn);
         }
 
         [HttpPost("login")]

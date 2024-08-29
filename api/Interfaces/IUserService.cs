@@ -11,7 +11,6 @@ namespace api.Interfaces
     {
         UserDto GetUserWithStats(int userId);
         void AddUser(UserForCreationDto userDto);
-        string Authenticate(string username, string password);
         void UpdateUser(UserForUpdateDto userDto);
         UserDto GetByUserId(int id);
 

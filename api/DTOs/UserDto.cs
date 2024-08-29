@@ -12,6 +12,7 @@ namespace api.DTOs
         public string Username { get; set; }
         public string Email { get; set; }
         public UserRole Role { get; set; }
+        public string RoleName => Role.ToString();
         public UserStatsDto UserStats { get; set; }
         public ICollection<UserBookProgressDto> UserBookProgresses { get; set; }
     }

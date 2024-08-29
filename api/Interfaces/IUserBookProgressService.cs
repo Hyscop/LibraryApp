@@ -13,5 +13,6 @@ namespace api.Interfaces
         void StartReadingBook(int userId, int bookId);
         void UpdateReadingProgress(int userId, int bookId, int currentPage);
         void FinishReadingBook(int userId, int bookId);
+        IEnumerable<UserBookProgressDto> GetCurrentReadingBooks(int userId);
     }
 }

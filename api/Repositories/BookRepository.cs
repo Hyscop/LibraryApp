@@ -54,5 +54,13 @@ namespace api.Repositories
                 .Include(b => b.Category)
                 .ToList();
         }
+
+        public IEnumerable<Book> GetBooksByCategory(int categoryId)
+        {
+            return _context.Books
+                .Include(b => b.Category) // Eagerly load the Category
+                .Where(b => b.CategoryId == categoryId)
+                .ToList();
+        }
     }
 }

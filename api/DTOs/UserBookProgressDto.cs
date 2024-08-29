@@ -17,4 +17,18 @@ namespace api.DTOs
         public DateTime StartDate { get; set; }
         public DateTime LastUpdatedTime { get; set; }
     }
+
+    public class StartFinishReadingDto
+    {
+        public int UserId { get; set; }
+        public int BookId { get; set; }
+    }
+
+    public class UpdateReadingDto
+    {
+        public int UserId { get; set; }
+        public int BookId { get; set; }
+        public int CurrentPage { get; set; }
+
+    }
 }

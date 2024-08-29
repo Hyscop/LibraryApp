@@ -14,5 +14,6 @@ namespace api.Interfaces
         void UpdateBook(Book book);
         bool DeleteBook(int id);
         IEnumerable<Book> GetBooks();
+        IEnumerable<Book> GetBooksByCategory(int categoryId);
     }
 }

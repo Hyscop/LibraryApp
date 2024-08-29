@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Data;
 using api.Interfaces;
 using api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories
 {
@@ -31,6 +32,15 @@ namespace api.Repositories
         public UserBookProgress GetProgressByUserAndBook(int userId, int bookId)
         {
             return _context.UserBookProgresses.SingleOrDefault(ubp => ubp.UserId == userId && ubp.BookId == bookId);
+        }
+
+        public IEnumerable<UserBookProgress> GetProgressesByUserId(int userId)
+        {
+            return _context.UserBookProgresses
+                .Where(ubp => ubp.UserId == userId)
+                .Include(ubp => ubp.Book)
+                .Include(ubp => ubp.User)
+                .ToList();
         }
 
         public void UpdateProgress(UserBookProgress progress)

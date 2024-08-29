@@ -38,7 +38,10 @@ namespace api.Repositories
 
         public User GetByUserId(int id)
         {
-            return _context.Users.Find(id);
+            return _context.Users
+                .Include(u => u.UserBookProgresses)
+                    .ThenInclude(ubp => ubp.Book)  // Include related books
+                .SingleOrDefault(u => u.UserId == id);
         }
 
         public User GetByUsername(string username)
@@ -55,6 +58,14 @@ namespace api.Repositories
         public User GetUserWithStats(int userId)
         {
             return _context.Users.Include(u => u.UserStats).SingleOrDefault(u => u.UserId == userId);
+        }
+
+        public IEnumerable<User> GetAllUsers()
+        {
+            return _context.Users
+                           .Include(u => u.UserStats)
+                           .Include(u => u.UserBookProgresses)
+                           .ToList();
         }
     }
 

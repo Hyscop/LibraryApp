@@ -13,11 +13,13 @@ namespace api.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBookRepository _bookRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
-        public BookController(IBookRepository bookRepository, IMapper mapper)
+        public BookController(IBookRepository bookRepository, IMapper mapper, ICategoryRepository categoryRepository)
         {
             _bookRepository = bookRepository;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
@@ -56,10 +58,18 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
 
+            var category = _categoryRepository.GetCategoryById(bookDto.CategoryId);
+            if (category == null)
+            {
+                return NotFound("Category not found");
+            }
+
             var book = _mapper.Map<Book>(bookDto);
+            book.Category = category;
             _bookRepository.AddBook(book);
 
-            return CreatedAtAction(nameof(GetBookById), "Book", new { id = book.Id }, _mapper.Map<BookDto>(book));
+            var bookToReturn = _mapper.Map<BookDto>(book);
+            return CreatedAtAction(nameof(GetBookById), new { id = bookToReturn.Id }, bookToReturn);
         }
 
         [HttpPut("Update/{id}")]
@@ -97,6 +107,14 @@ namespace api.Controllers
 
             _bookRepository.DeleteBook(id);
             return NoContent();
+        }
+
+        [HttpGet("GetBooksByCategory/{categoryId}")]
+        public IActionResult GetBookByCategory(int categoryId)
+        {
+            var books = _bookRepository.GetBooksByCategory(categoryId);
+            var bookDtos = _mapper.Map<IEnumerable<BookDto>>(books);
+            return Ok(bookDtos);
         }
     }
 }
